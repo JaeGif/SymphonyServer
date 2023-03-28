@@ -29,6 +29,7 @@ const auth = require('./middleware/auth.js')();
 
 const mongoDb = config.MONGO_URL; // DO NOT PUSH Mongo_DEV_URL
 mongoose.set('strictQuery', true);
+console.log(config.MONGO_URL);
 mongoose
   .connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(console.log('mongo connected'));
@@ -51,7 +52,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
-app.use('/users', usersRouter);
+app.use('api/users', usersRouter);
 
 const io = new Server(server, {
   cors: {
@@ -81,4 +82,4 @@ server.listen(config.PORT, () => {
   console.log('listening on 3001');
 });
 
-module.exports = app;
+module.exports = server;
