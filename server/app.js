@@ -1,16 +1,21 @@
 const express = require('express');
 const app = express();
+const config = require('./utilities/config');
+
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const User = require('./models/User');
-app.use(
-  require('express-session')({
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+
+const MongoStore = require('connect-mongo');
+const session = require('express-session')({
+  secret: config.SECRET,
+  resave: true,
+  store: MongoStore.create({ mongoUrl: config.MONGO_URL }),
+  saveUninitialized: false,
+});
+app.use(session);
+
 const mongoose = require('mongoose');
 const passport = require('passport');
 const localStrategy = require('passport-local');
@@ -21,9 +26,8 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 const cors = require('cors');
 const auth = require('./middleware/auth.js')();
-require('dotenv').config();
 
-const mongoDb = process.env.MONGO_DEV_URL; // DO NOT PUSH Mongo_DEV_URL
+const mongoDb = config.MONGO_URL; // DO NOT PUSH Mongo_DEV_URL
 mongoose.set('strictQuery', true);
 mongoose
   .connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true })
@@ -73,7 +77,7 @@ io.on('connection', (socket) => {
   next();
 }); */
 
-server.listen(3001, () => {
+server.listen(config.PORT, () => {
   console.log('listening on 3001');
 });
 
