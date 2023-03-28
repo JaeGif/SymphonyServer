@@ -1,15 +1,14 @@
 const express = require('express'),
-  User = require('../models/user'),
+  User = require('../models/User'),
   jwt = require('jwt-simple');
-const { default: mongoose } = require('mongoose');
+const { mongoose } = require('mongoose');
 const fs = require('fs');
 
-exports.login = function (req, res) {
+exports.login = async function (req, res) {
   console.log('Logged In');
-  User.findOne({ username: req.body.username }, (err, user) => {
-    if (err) {
-      console.log('Error Happened In auth /token Route');
-    } else {
+
+  User.findOne({ username: req.body.username })
+    .then((user) => {
       const payload = {
         id: user._id,
         expire: Date.now() + 1000 * 60 * 60 * 24 * 7, //7 days
@@ -19,24 +18,27 @@ exports.login = function (req, res) {
         token: token,
         user: user._id,
       });
-    }
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.register = function (req, res) {
-  const { firstName, lastName, username, password } = req.body;
-  const userId = mongoose.Types.ObjectId();
+  console.log(req.body);
+  const { firstName, lastName, username, password, isModerator } = req.body;
+  const userId = new mongoose.Types.ObjectId();
 
-  fs.mkdirSync(`./uploads/${userId.toString()}`, { recursive: true });
+  fs.mkdirSync(`./public/uploads/${userId.toString()}`, { recursive: true });
 
   User.register(
     new User({
       _id: userId,
-      firstName: firstName,
-      lastName: lastName,
+      firstName: firstName || '',
+      lastName: lastName || '',
       username: username,
       bio: '',
-      isModerator: false,
+      isModerator: isModerator || false,
       avatar: 'none',
     }),
     password,

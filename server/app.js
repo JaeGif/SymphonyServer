@@ -1,18 +1,26 @@
 const express = require('express');
+const app = express();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const User = require('./models/User');
-
+app.use(
+  require('express-session')({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 const mongoose = require('mongoose');
-
-const indexRouter = require('./routes/index');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const http = require('http');
-const app = express();
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const cors = require('cors');
+const auth = require('./middleware/auth.js')();
 require('dotenv').config();
 
 const mongoDb = process.env.MONGO_DEV_URL; // DO NOT PUSH Mongo_DEV_URL
@@ -24,6 +32,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'mongo connection error'));
 
 // passport.js config
+app.use(auth.initialize());
 passport.use(new localStrategy(User.authenticate()));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,7 +46,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', authRouter);
 app.use('/users', usersRouter);
 
 const io = new Server(server, {
