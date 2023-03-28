@@ -1,16 +1,10 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
-const api = supertest(app);
+const api = supertest(app.server);
 
 const User = require('../models/User');
-const testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  username: 'TestedUser',
-  isModerator: false,
-  avatar: 'none',
-};
+
 const registerUser = {
   firstName: 'John',
   lastName: 'Register',
@@ -22,11 +16,17 @@ const registerUser = {
 
 // delete users from test base, then reinit a new user
 beforeEach(async () => {
-  return await User.deleteMany({});
+  await User.deleteMany({});
 });
 
-test('user can be registered successfully', async () => {
+test('User can be registered and logged in successfully', async () => {
   await api.post('/register').send(registerUser).expect(200);
+  const res = await api
+    .post('/login')
+    .send({ password: registerUser.password, username: registerUser.username })
+    .expect(200);
+  expect(res.body).toHaveProperty('token');
+  expect(res.body).toHaveProperty('user');
 });
 
 afterAll(async () => {

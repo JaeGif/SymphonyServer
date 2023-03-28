@@ -82,4 +82,4 @@ server.listen(config.PORT, () => {
   console.log('listening on 3001');
 });
 
-module.exports = server;
+module.exports = { server, io };

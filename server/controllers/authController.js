@@ -5,8 +5,6 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.login = async function (req, res) {
-  console.log('Logged In');
-
   User.findOne({ username: req.body.username })
     .then((user) => {
       const payload = {
@@ -29,7 +27,9 @@ exports.register = function (req, res) {
   const { firstName, lastName, username, password, isModerator } = req.body;
   const userId = new mongoose.Types.ObjectId();
 
-  fs.mkdirSync(`./public/uploads/${userId.toString()}`, { recursive: true });
+  if (process.env.NODE_ENV !== 'test') {
+    fs.mkdirSync(`./public/uploads/${userId.toString()}`, { recursive: true });
+  }
 
   User.register(
     new User({
