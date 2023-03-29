@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const fs = require('fs');
 const api = supertest(app.server);
-
 const User = require('../models/User');
 
+const testUser = {
+  firstName: 'Test',
+  lastName: 'User',
+  username: 'Testing',
+  isModerator: false,
+  avatar: '',
+  password: 'superSecretPass22',
+};
 const registerUser = {
   firstName: 'John',
   lastName: 'Register',
@@ -16,7 +24,7 @@ const registerUser = {
 
 // delete users from test base, then reinit a new user
 beforeEach(async () => {
-  await User.deleteMany({});
+  await User.findOneAndDelete({ username: 'RegisterCheck' });
 });
 
 test('User can be registered and logged in successfully', async () => {
@@ -28,7 +36,7 @@ test('User can be registered and logged in successfully', async () => {
   expect(res.body).toHaveProperty('token');
   expect(res.body).toHaveProperty('user');
 });
-
 afterAll(async () => {
   await mongoose.connection.close();
+  fs.rmSync('./public/TESTuploads', { recursive: true, force: true });
 });

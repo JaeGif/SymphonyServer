@@ -29,7 +29,6 @@ const auth = require('./middleware/auth.js')();
 
 const mongoDb = config.MONGO_URL; // DO NOT PUSH Mongo_DEV_URL
 mongoose.set('strictQuery', true);
-console.log(config.MONGO_URL);
 mongoose
   .connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(console.log('mongo connected'));
@@ -64,9 +63,16 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log(`sockets open ${socket.id}`);
+  console.log(`User Connected ${socket.id}`);
   socket.on('message', (data) => {
+    console.log(data);
     socket.broadcast.emit('broadcast_message', data);
+  });
+  socket.on('join_room', (data) => {
+    console.log('User joined room#:', data);
+  });
+  socket.on('disconnect', () => {
+    console.log(`User disconnected ${socket.id}`);
   });
 });
 /* io.use((socket, next) => {

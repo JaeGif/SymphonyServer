@@ -29,6 +29,10 @@ exports.register = function (req, res) {
 
   if (process.env.NODE_ENV !== 'test') {
     fs.mkdirSync(`./public/uploads/${userId.toString()}`, { recursive: true });
+  } else {
+    fs.mkdirSync(`./public/TESTuploads/${userId.toString()}`, {
+      recursive: true,
+    });
   }
 
   User.register(
