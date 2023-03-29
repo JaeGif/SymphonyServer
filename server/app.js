@@ -62,24 +62,10 @@ const io = new Server(server, {
 });
 const orderHandler = require('./handlers/orderHandler');
 const onConnection = (socket) => {
-  console.log('User connected to'), socket.id;
+  console.log('User connected to', socket.id);
   orderHandler(io, socket);
 };
-io.on('connection', onConnection);
-
-/* io.on('connection', (socket) => {
-  console.log(`User Connected ${socket.id}`);
-  socket.on('message', (data) => {
-    console.log(data);
-    socket.broadcast.emit('broadcast_message', data);
-  });
-  socket.on('join_room', (data) => {
-    console.log('User joined room#:', data);
-  });
-  socket.on('disconnect', () => {
-    console.log(`User disconnected ${socket.id}`);
-  });
-}); */
+io.on('connection', (socket) => onConnection(socket));
 
 /* io.use((socket, next) => {
   const username = socket.handshake.auth.username;

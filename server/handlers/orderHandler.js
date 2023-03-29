@@ -1,10 +1,12 @@
+const Message = require('../models/Message');
+
 module.exports = (io, socket) => {
   const joinRoomOrder = (payload) => {
     console.log('User joined room#:', payload);
+    socket.join(payload);
   };
   const sendOrder = (payload) => {
-    console.log(payload);
-    socket.broadcast.emit('broadcast_message', payload);
+    socket.to(payload.room).emit('recieve_message', payload);
   };
 
   const disconnectOrder = () => {
@@ -12,6 +14,6 @@ module.exports = (io, socket) => {
   };
 
   socket.on('join_room', joinRoomOrder);
-  socket.on('message', sendOrder);
   socket.on('disconnect', disconnectOrder);
+  socket.on('send_message', sendOrder);
 };

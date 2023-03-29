@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   password: { type: String, minLength: 6 },
   isModerator: { type: Boolean },
   avatar: { type: String },
+  rooms: [{ type: Schema.Types.ObjectId, ref: 'Room' }],
 });
 
 // plugin to handle passwords
