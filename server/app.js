@@ -52,7 +52,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
 app.use('api/users', usersRouter);
-
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -61,8 +60,14 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+const orderHandler = require('./handlers/orderHandler');
+const onConnection = (socket) => {
+  console.log('User connected to'), socket.id;
+  orderHandler(io, socket);
+};
+io.on('connection', onConnection);
 
-io.on('connection', (socket) => {
+/* io.on('connection', (socket) => {
   console.log(`User Connected ${socket.id}`);
   socket.on('message', (data) => {
     console.log(data);
@@ -74,7 +79,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log(`User disconnected ${socket.id}`);
   });
-});
+}); */
+
 /* io.use((socket, next) => {
   const username = socket.handshake.auth.username;
   if (!username) {
@@ -88,4 +94,4 @@ server.listen(config.PORT, () => {
   console.log('listening on 3001');
 });
 
-module.exports = { server, io };
+module.exports = { server };
