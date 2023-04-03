@@ -51,7 +51,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
-app.use('api/users', usersRouter);
+app.use('/api', usersRouter);
+
 const io = new Server(server, {
   cors: {
     origin: '*',
