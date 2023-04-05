@@ -7,6 +7,7 @@ const fs = require('fs');
 exports.login = async function (req, res) {
   User.findOne({ username: req.body.username })
     .then((user) => {
+      console.log(user);
       const payload = {
         id: user._id,
         expire: Date.now() + 1000 * 60 * 60 * 24 * 7, //7 days
