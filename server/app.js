@@ -21,6 +21,7 @@ const passport = require('passport');
 const localStrategy = require('passport-local');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
+const messagesRouter = require('./routes/messages');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
@@ -52,6 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
 app.use('/api', usersRouter);
+app.use('/api', messagesRouter);
 
 const io = new Server(server, {
   cors: {
@@ -67,15 +69,6 @@ const onConnection = (socket) => {
   orderHandler(io, socket);
 };
 io.on('connection', (socket) => onConnection(socket));
-
-/* io.use((socket, next) => {
-  const username = socket.handshake.auth.username;
-  if (!username) {
-    return next(new Error("invalid username"));
-  }
-  socket.username = username;
-  next();
-}); */
 
 server.listen(config.PORT, () => {
   console.log('listening on 3001');

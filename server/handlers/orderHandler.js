@@ -13,7 +13,6 @@ module.exports = (io, socket) => {
     socket.join(payload);
   };
   const sendOrder = (payload) => {
-    console.log(payload);
     messageController.saveMessage(payload);
     socket.to(payload.room).emit('recieve_message', payload);
   };

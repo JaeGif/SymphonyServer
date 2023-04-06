@@ -15,5 +15,39 @@ exports.saveMessage = async (payload) => {
     timestamp: payload.timestamp,
   });
   await message.save();
-  console.log('done');
+};
+exports.get_messages = async (req, res, next) => {
+  let { room, cursor, returnLimit, userId } = req.query;
+  returnLimit = returnLimit || 5;
+  cursor = cursor || 0;
+  userId = userId || null;
+
+  const skipBy = parseInt(cursor);
+  try {
+    const messages = await Message.find({ room: room })
+      .sort('-createdAt')
+      .skip(skipBy)
+      .limit(returnLimit);
+    let results = [...messages];
+    if (userId) {
+      // takes uID string
+      results = results.filter((post) => post.user.toString() === userid);
+    }
+    const nextCursor = parseInt(cursor) + results.length;
+    const previousCursor = parseInt(cursor);
+
+    res.json({ messages: results, nextCursor, previousCursor }).status(200);
+  } catch (err) {
+    res.sendStatus(400);
+    throw Error(err);
+  }
+};
+
+exports.get_message = async (req, res, next) => {
+  try {
+    const message = await Message.findById(req.params.id);
+    res.json({ message }).status(200);
+  } catch (err) {
+    throw Error(err);
+  }
 };
