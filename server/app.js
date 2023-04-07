@@ -22,6 +22,8 @@ const localStrategy = require('passport-local');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const messagesRouter = require('./routes/messages');
+const roomsRouter = require('./routes/rooms');
+
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
@@ -54,6 +56,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', authRouter);
 app.use('/api', usersRouter);
 app.use('/api', messagesRouter);
+app.use('/api', roomsRouter);
 
 const io = new Server(server, {
   cors: {

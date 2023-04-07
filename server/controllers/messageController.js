@@ -16,6 +16,7 @@ exports.saveMessage = async (payload) => {
   });
   await message.save();
 };
+
 exports.get_messages = async (req, res, next) => {
   let { room, cursor, returnLimit, userId } = req.query;
   returnLimit = returnLimit || 5;
