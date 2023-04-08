@@ -12,14 +12,16 @@ exports.user_get = async (req, res, next) => {
 exports.users_get = async (req, res, next) => {
   let { q, l } = req.query;
   let limit = l || 5;
-  let query = null || q;
-  /*   const users = await User.find({});
-   */
+  let query = q || null;
+
   console.log(query);
   if (query) {
     const users = await User.find({
       username: { $regex: query, $options: 'i' },
     }).limit(limit);
+    users ? res.json({ users }).status(200) : res.sendStatus(400);
+  } else {
+    const users = await User.find({});
     users ? res.json({ users }).status(200) : res.sendStatus(400);
   }
 };

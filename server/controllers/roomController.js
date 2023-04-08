@@ -23,15 +23,39 @@ exports.room_get = async (req, res, next) => {
   }
 };
 exports.room_post = async (req, res, next) => {
-  const { users, id, public } = JSON.parse(req.body);
-  let status = public || false;
+  let { users, public, title, topic } = req.body;
+  users = JSON.parse(users);
+  let userIdx = [];
+  for (let i = 0; i < users.length; i++) {
+    userIdx.push(users[i].user._id);
+  }
+  let status = public || true;
+  let titleAlt = title || '';
+  if ((!title && users.length > 0) || (title === '' && users.length > 0)) {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i]) {
+        titleAlt += ', ' + users[i].user.username;
+      }
+      if (i === 2 && users.length > 3) {
+        const length = users.length - 3;
+        titleAlt += `and ${length} more...`;
+        break;
+      }
+    }
+  }
   try {
+    const id = new mongoose.Types.ObjectId();
     const room = new Room({
-      users: users,
+      users: userIdx,
       _id: id,
       public: status,
+      title: titleAlt,
+      topic: topic,
     });
+
+    await User.updateMany({ _id: { $in: userIdx } }, { $push: { rooms: id } });
     await room.save();
+    return res.json({ room: id }).status(200);
   } catch (err) {
     throw Error(err);
   }
