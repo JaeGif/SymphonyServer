@@ -35,13 +35,17 @@ exports.user_put = async (req, res, next) => {
     case 'userLeaving':
       try {
         const userDoc = await User.findByIdAndUpdate(user, {
-          $pull: { rooms: room._id },
+          $pull: { rooms: room },
         });
-        return res
-          .json({
-            message: `User successsfully removed from ${room.title}`,
-          })
-          .status(200);
+        if (userDoc) {
+          return res
+            .json({
+              message: `User successsfully removed from ${room}`,
+            })
+            .status(200);
+        } else {
+          res.sendStatus(404);
+        }
       } catch (error) {
         throw new Error(error);
       }

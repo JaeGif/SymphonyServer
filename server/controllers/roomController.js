@@ -67,15 +67,20 @@ exports.room_put = async (req, res, next) => {
   user = user || null;
   room = room || null;
   console.log(order, user, room);
+
   switch (order) {
     case 'userLeaving':
       try {
         const roomDoc = await Room.findByIdAndUpdate(room, {
           $pull: { users: user },
         });
-        return res
-          .json({ message: `Successfully left ${room.title}` })
-          .status(200);
+        if (roomDoc) {
+          return res
+            .json({ message: `Successfully left ${roomDoc}` })
+            .status(200);
+        } else {
+          res.sendStatus(404);
+        }
       } catch (error) {
         throw new Error(error);
       }
