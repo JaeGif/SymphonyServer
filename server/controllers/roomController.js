@@ -57,6 +57,30 @@ exports.room_post = async (req, res, next) => {
     await room.save();
     return res.json({ room: id }).status(200);
   } catch (err) {
-    throw Error(err);
+    throw new Error(err);
+  }
+};
+exports.room_put = async (req, res, next) => {
+  console.log(req.body);
+
+  let { order, user, room } = req.body;
+  user = user || null;
+  room = room || null;
+  console.log(order, user, room);
+  switch (order) {
+    case 'userLeaving':
+      try {
+        const roomDoc = await Room.findByIdAndUpdate(room, {
+          $pull: { users: user },
+        });
+        return res
+          .json({ message: `Successfully left ${room.title}` })
+          .status(200);
+      } catch (error) {
+        throw new Error(error);
+      }
+
+    default:
+      return res.json({ err: 'No order specified' }).status(400);
   }
 };

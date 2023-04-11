@@ -14,7 +14,6 @@ exports.users_get = async (req, res, next) => {
   let limit = l || 5;
   let query = q || null;
 
-  console.log(query);
   if (query) {
     const users = await User.find({
       username: { $regex: query, $options: 'i' },
@@ -23,5 +22,30 @@ exports.users_get = async (req, res, next) => {
   } else {
     const users = await User.find({});
     users ? res.json({ users }).status(200) : res.sendStatus(400);
+  }
+};
+exports.user_put = async (req, res, next) => {
+  console.log(req.body);
+  let { order, user, room } = req.body;
+  user = user || null;
+  room = room || null;
+  console.log(order, user, room);
+
+  switch (order) {
+    case 'userLeaving':
+      try {
+        const userDoc = await User.findByIdAndUpdate(user, {
+          $pull: { rooms: room._id },
+        });
+        return res
+          .json({
+            message: `User successsfully removed from ${room.title}`,
+          })
+          .status(200);
+      } catch (error) {
+        throw new Error(error);
+      }
+    default:
+      return res.json({ err: 'No order specified' }).status(400);
   }
 };
