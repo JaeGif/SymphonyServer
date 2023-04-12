@@ -7,11 +7,31 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.rooms_get = async (req, res, next) => {
-  try {
-    const rooms = await Room.find({});
-    rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
-  } catch (err) {
-    throw Error(err);
+  const { topic, title } = req.query;
+  if (topic || title) {
+    // search query
+    let topicQuery;
+    let titleQuery;
+    topic ? (topicQuery = { topic: topic }) : (topicQuery = {});
+    title ? (titleQuery = { title: title }) : (titleQuery = {});
+    try {
+      console.log(topicQuery, titleQuery);
+      const rooms = await Room.find(topicQuery)
+        .find(titleQuery)
+        .find({ public: true })
+        .sort({ users: -1 });
+      console.log(rooms);
+      rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
+    } catch (err) {
+      throw Error(err);
+    }
+  } else {
+    try {
+      const rooms = await Room.find({});
+      rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
+    } catch (err) {
+      throw Error(err);
+    }
   }
 };
 exports.room_get = async (req, res, next) => {

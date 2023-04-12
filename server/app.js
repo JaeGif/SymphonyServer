@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const User = require('./models/User');
+const bodyParser = require('body-parser');
 
 const MongoStore = require('connect-mongo');
 const session = require('express-session')({
@@ -48,8 +49,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(cors());
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
