@@ -32,7 +32,7 @@ exports.get_messages = async (req, res, next) => {
     let results = [...messages];
     if (userId) {
       // takes uID string
-      results = results.filter((post) => post.user.toString() === userid);
+      results = results.filter((post) => post.user.toString() === userId);
     }
     const nextCursor = parseInt(cursor) + results.length;
     const previousCursor = parseInt(cursor);
