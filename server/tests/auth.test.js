@@ -5,14 +5,6 @@ const fs = require('fs');
 const api = supertest(app.server);
 const User = require('../models/User');
 
-const testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  username: 'Testing',
-  isModerator: false,
-  avatar: '',
-  password: 'superSecretPass22',
-};
 const registerUser = {
   firstName: 'John',
   lastName: 'Register',
