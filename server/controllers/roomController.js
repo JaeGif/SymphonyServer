@@ -18,15 +18,20 @@ exports.rooms_get = async (req, res, next) => {
     // search query
     let topicQuery;
     let titleQuery;
-    topic ? (topicQuery = { topic: topic }) : (topicQuery = {});
-    title ? (titleQuery = { title: title }) : (titleQuery = {});
+    topic ? (topicQuery = new RegExp(topic, 'i')) : (topicQuery = /[\s\S]*/);
+    title ? (titleQuery = new RegExp(title, 'i')) : (titleQuery = /[\s\S]*/);
+
+    console.log(topicQuery, titleQuery);
     try {
-      const rooms = await Room.find(topicQuery)
-        .find(titleQuery)
+      const rooms = await Room.find({
+        topic: topicQuery,
+      })
+        .find({ title: titleQuery })
         .find({ public: true })
         .sort({ users: -1 })
         .skip(skipBy)
         .limit(returnLimit);
+      console.log(rooms);
       rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
     } catch (err) {
       throw Error(err);
