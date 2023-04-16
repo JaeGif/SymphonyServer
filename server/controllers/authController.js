@@ -25,7 +25,8 @@ exports.login = async function (req, res) {
 
 exports.register = function (req, res) {
   console.log(req.body);
-  const { firstName, lastName, username, password, isModerator } = req.body;
+  const { firstName, lastName, username, password, email, isModerator } =
+    req.body;
   const userId = new mongoose.Types.ObjectId();
 
   if (process.env.NODE_ENV !== 'test') {
@@ -42,6 +43,7 @@ exports.register = function (req, res) {
       firstName: firstName || '',
       lastName: lastName || '',
       username: username,
+      email: email || '',
       bio: '',
       isModerator: isModerator || false,
       avatar: 'none',

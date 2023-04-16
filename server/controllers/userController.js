@@ -53,3 +53,12 @@ exports.user_put = async (req, res, next) => {
       return res.json({ err: 'No order specified' }).status(400);
   }
 };
+exports.users_username_check = async (req, res, next) => {
+  try {
+    const users = await User.find({ username: req.body.username });
+    if (users.length >= 1) res.sendStatus(409); // username conflict
+    else res.sendStatus(200);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
