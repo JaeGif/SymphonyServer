@@ -122,7 +122,21 @@ exports.room_put = async (req, res, next) => {
       } catch (error) {
         throw new Error(error);
       }
-
+    case 'userJoining':
+      try {
+        const roomDoc = await Room.findByIdAndUpdate(room, {
+          $push: { users: user },
+        });
+        if (roomDoc) {
+          return res
+            .json({ message: `Successfully joined ${roomDoc}` })
+            .status(200);
+        } else {
+          return res.sendStatus(404);
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
     default:
       return res.json({ err: 'No order specified' }).status(400);
   }

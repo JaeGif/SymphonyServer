@@ -5,7 +5,6 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.user_get = async (req, res, next) => {
-  console.log('looking');
   const user = await User.findById(req.params.id);
   user ? res.json({ user }).status(200) : res.sendStatus(400);
 };
@@ -45,6 +44,21 @@ exports.user_put = async (req, res, next) => {
             .status(200);
         } else {
           res.sendStatus(404);
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    case 'userJoining':
+      try {
+        const userDoc = await User.findByIdAndUpdate(user, {
+          $push: { rooms: room },
+        });
+        if (userDoc) {
+          return res
+            .json({ message: `Successfully joined ${room}` })
+            .status(200);
+        } else {
+          return res.sendStatus(404);
         }
       } catch (error) {
         throw new Error(error);

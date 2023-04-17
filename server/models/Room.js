@@ -8,6 +8,7 @@ const RoomSchema = new Schema(
     public: { type: Boolean },
     topic: { type: String },
     title: { type: String },
+    avatar: { type: String },
   },
   { timestamps: true }
 );
