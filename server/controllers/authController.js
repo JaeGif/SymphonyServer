@@ -44,6 +44,7 @@ exports.register = function (req, res) {
       lastName: lastName || '',
       username: username,
       email: email || '',
+      website: '',
       bio: '',
       isModerator: isModerator || false,
       avatar: 'none',

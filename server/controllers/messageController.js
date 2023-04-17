@@ -8,8 +8,13 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.saveMessage = async (payload) => {
+  console.log(payload.user);
   const message = new Message({
-    user: { _id: payload.user._id, username: payload.user.username },
+    user: {
+      _id: payload.user._id,
+      username: payload.user.username,
+      avatar: payload.user.avatar,
+    },
     room: payload.room,
     message: payload.message,
     timestamp: payload.timestamp,
