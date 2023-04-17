@@ -113,9 +113,10 @@ exports.room_put = async (req, res, next) => {
           $pull: { users: user },
         });
         if (roomDoc) {
-          return res
-            .json({ message: `Successfully left ${roomDoc}` })
-            .status(200);
+          // cleanup if no one here
+
+          if (roomDoc.users.length === 0) await Room.findByIdAndDelete(room);
+          return res.json({ room: roomDoc }).status(200);
         } else {
           res.sendStatus(404);
         }

@@ -7,6 +7,7 @@ const RoomSchema = new Schema(
     messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
     public: { type: Boolean },
     topic: { type: String },
+    description: { type: String },
     title: { type: String },
     avatar: { type: String },
   },
