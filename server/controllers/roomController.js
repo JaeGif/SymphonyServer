@@ -61,7 +61,7 @@ exports.room_get = async (req, res, next) => {
   }
 };
 exports.room_post = async (req, res, next) => {
-  let { users, public, title, topic } = req.body;
+  let { users, public, title, topic, description } = req.body;
   users = JSON.parse(users);
   let userIdx = [];
   for (let i = 0; i < users.length; i++) {
@@ -89,6 +89,7 @@ exports.room_post = async (req, res, next) => {
       public: status,
       title: titleAlt,
       topic: topic,
+      description: description,
     });
 
     await User.updateMany({ _id: { $in: userIdx } }, { $push: { rooms: id } });
