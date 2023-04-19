@@ -5,10 +5,10 @@ const RoomSchema = new Schema(
   {
     users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
     messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
-    public: { type: Boolean },
-    topic: { type: String },
-    description: { type: String },
-    title: { type: String },
+    public: { type: Boolean, required: true },
+    topic: { type: String, required: true },
+    description: { type: String, maxLength: 150 },
+    title: { type: String, required: true },
     avatar: { type: String },
   },
   { timestamps: true }
