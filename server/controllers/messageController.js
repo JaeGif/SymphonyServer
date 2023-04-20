@@ -57,3 +57,23 @@ exports.get_message = async (req, res, next) => {
     throw Error(err);
   }
 };
+exports.put_message = async (req, res, next) => {
+  const { editMessage } = JSON.parse(req.body);
+  try {
+    const message = await Message.findByIdAndUpdate(req.params.id, {
+      message: editMessage,
+    });
+    message ? res.json({ message }).status(200) : res.sendStatus(404);
+  } catch (err) {
+    throw Error(err);
+  }
+};
+exports.delete_message = async (req, res, next) => {
+  const { messageId } = JSON.parse(req.body);
+  try {
+    const message = await Message.findByIdAndDelete(messageId);
+    message ? res.sendStatus(200) : res.sendStatus(404);
+  } catch (err) {
+    throw Error(err);
+  }
+};
