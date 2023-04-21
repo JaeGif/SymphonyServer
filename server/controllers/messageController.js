@@ -8,7 +8,6 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.saveMessage = async (payload) => {
-  console.log('saveMessage', payload._id);
   try {
     const message = new Message({
       _id: payload._id,
@@ -64,11 +63,8 @@ exports.get_message = async (req, res, next) => {
   }
 };
 exports.put_message = async (req, res, next) => {
-  console.log('hello');
-
   const { message } = req.body;
-  console.log(req.body);
-  console.log(req.params);
+
   try {
     const messageDoc = await Message.findByIdAndUpdate(req.params.id, {
       $set: {

@@ -13,10 +13,10 @@ module.exports = (io, socket) => {
     socket.join(payload);
   };
   const sendOrder = (payload) => {
+    console.log(payload);
     messageController.saveMessage(payload);
-    socket.to(payload.room).emit('recieve_message', payload);
+    io.in(payload.room).emit('recieve_message', payload);
   };
-
   const disconnectOrder = () => {
     console.log(`User disconnected from ${socket.id}`);
   };
