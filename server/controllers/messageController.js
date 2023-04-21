@@ -8,18 +8,24 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.saveMessage = async (payload) => {
-  console.log(payload.user);
-  const message = new Message({
-    user: {
-      _id: payload.user._id,
-      username: payload.user.username,
-      avatar: payload.user.avatar,
-    },
-    room: payload.room,
-    message: payload.message,
-    timestamp: payload.timestamp,
-  });
-  await message.save();
+  console.log('saveMessage', payload._id);
+  try {
+    const message = new Message({
+      _id: payload._id,
+      user: {
+        _id: payload.user._id,
+        username: payload.user.username,
+        avatar: payload.user.avatar,
+      },
+      room: payload.room,
+      message: payload.message,
+      timestamp: payload.timestamp,
+    });
+
+    await message.save();
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 exports.get_messages = async (req, res, next) => {
@@ -58,20 +64,27 @@ exports.get_message = async (req, res, next) => {
   }
 };
 exports.put_message = async (req, res, next) => {
-  const { editMessage } = JSON.parse(req.body);
+  console.log('hello');
+
+  const { message } = req.body;
+  console.log(req.body);
+  console.log(req.params);
   try {
-    const message = await Message.findByIdAndUpdate(req.params.id, {
-      message: editMessage,
+    const messageDoc = await Message.findByIdAndUpdate(req.params.id, {
+      $set: {
+        message: message,
+      },
     });
-    message ? res.json({ message }).status(200) : res.sendStatus(404);
+    messageDoc
+      ? res.json({ message: messageDoc }).status(200)
+      : res.sendStatus(404);
   } catch (err) {
     throw Error(err);
   }
 };
 exports.delete_message = async (req, res, next) => {
-  const { messageId } = JSON.parse(req.body);
   try {
-    const message = await Message.findByIdAndDelete(messageId);
+    const message = await Message.findByIdAndDelete(req.params.id);
     message ? res.sendStatus(200) : res.sendStatus(404);
   } catch (err) {
     throw Error(err);

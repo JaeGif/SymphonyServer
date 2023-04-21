@@ -8,6 +8,7 @@ const MessageSchema = new Schema(
       username: { type: String, required: true },
       avatar: { type: String, required: true },
     },
+    _id: { type: String, required: true },
     room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
     message: { type: String, required: true },
     timestamp: { type: String, required: true },

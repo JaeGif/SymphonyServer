@@ -24,7 +24,6 @@ exports.users_get = async (req, res, next) => {
   }
 };
 exports.user_put = async (req, res, next) => {
-  console.log(req.body);
   let { order, user, room } = req.body;
   user = user || null;
   room = room || null;

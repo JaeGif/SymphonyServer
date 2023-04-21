@@ -18,7 +18,7 @@ module.exports = (io, socket) => {
   };
 
   const disconnectOrder = () => {
-    console.log(`User disconnected ${socket.id}`);
+    console.log(`User disconnected from ${socket.id}`);
   };
 
   socket.on('join_room', joinRoomOrder);
