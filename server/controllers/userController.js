@@ -24,10 +24,9 @@ exports.users_get = async (req, res, next) => {
   }
 };
 exports.user_put = async (req, res, next) => {
-  let { order, user, room } = req.body;
+  let { order, user, room, bio, website, email } = req.body;
   user = user || null;
   room = room || null;
-  console.log(order, user, room);
 
   switch (order) {
     case 'userLeaving':
@@ -58,6 +57,28 @@ exports.user_put = async (req, res, next) => {
             .status(200);
         } else {
           return res.sendStatus(404);
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    case 'updateUser':
+      let updateFields = {};
+
+      if (bio) updateFields.bio = bio;
+      if (email) updateFields.email = email;
+      if (website) updateFields.website = website;
+      if (!bio && !email && !website) res.sendStatus(400);
+      console.log(updateFields);
+
+      try {
+        const userDoc = await User.findByIdAndUpdate(req.params.id, {
+          $set: updateFields,
+        });
+        console.log('changed to ', userDoc);
+        if (userDoc) {
+          return res.status(200);
+        } else {
+          return res.status(404);
         }
       } catch (error) {
         throw new Error(error);
