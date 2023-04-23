@@ -16,9 +16,10 @@ router.post('/avatar', function (req, res) {
         errors: [{ title: 'Image Upload Error', detail: err.message }],
       });
     }
-
-    return res.json({ imageUrl: req.file.location });
+    console.log(req.file);
+    return res.json({ imageUrl: req.file.location }).status(200);
   });
 });
 router.put('/users/:id', userController.user_put);
+
 module.exports = router;

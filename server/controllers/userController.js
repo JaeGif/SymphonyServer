@@ -68,7 +68,6 @@ exports.user_put = async (req, res, next) => {
       if (email) updateFields.email = email;
       if (website) updateFields.website = website;
       if (!bio && !email && !website) res.sendStatus(400);
-      console.log(updateFields);
 
       try {
         const userDoc = await User.findByIdAndUpdate(req.params.id, {

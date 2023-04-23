@@ -2,8 +2,8 @@ require('dotenv').config();
 
 const PORT = process.env.PORT;
 const SECRET = process.env.SECRET;
-const AWS_SECRET = process.env.AWS_SECRET;
-const AWS_KEY = process.env.AWS_KEY;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_REGION = process.env.AWS_REGION;
 
 const MONGO_URL =
@@ -15,7 +15,7 @@ module.exports = {
   MONGO_URL,
   PORT,
   SECRET,
-  AWS_SECRET,
-  AWS_KEY,
+  AWS_SECRET_ACCESS_KEY,
+  AWS_ACCESS_KEY_ID,
   AWS_REGION,
 };

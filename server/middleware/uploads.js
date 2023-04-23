@@ -1,21 +1,16 @@
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
+const aws = require('aws-sdk'),
+  { S3 } = require('@aws-sdk/client-s3');
 const config = require('../utilities/config');
 
 aws.config.update({
-  // Your SECRET ACCESS KEY from AWS should go here,
-  // Never share it!
-  // Setup Env Variable, e.g: process.env.SECRET_ACCESS_KEY
-  secretAccessKey: config.AWS_SECRET,
-  // Not working key, Your ACCESS KEY ID from AWS should go here,
-  // Never share it!
-  // Setup Env Variable, e.g: process.env.ACCESS_KEY_ID
-  accessKeyId: config.AWS_KEY,
-  region: config.AWS_REGION, // region of your bucket
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  region: 'us-east-1',
 });
 
-const s3 = new aws.S3();
+const s3 = new S3();
 
 const upload = multer({
   storage: multerS3({
@@ -26,7 +21,10 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, Date.now().toString());
+      cb(null, `${Date.now().toString()} + ${file.originalname}`);
+    },
+    contentType: function (req, file, cb) {
+      cb(null, file.mimetype);
     },
   }),
 });
