@@ -3,6 +3,7 @@ const multerS3 = require('multer-s3');
 const aws = require('aws-sdk'),
   { S3 } = require('@aws-sdk/client-s3');
 const config = require('../utilities/config');
+const sharp = require('sharp');
 
 aws.config.update({
   secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
@@ -21,11 +22,30 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, `${Date.now().toString()} + ${file.originalname}`);
+      cb(null, `${Date.now().toString()}${file.originalname}`);
     },
     contentType: function (req, file, cb) {
       cb(null, file.mimetype);
     },
+    transforms: [
+      {
+        id: 'original',
+        key: function (req, file, cb) {
+          cb(null, `${file.originalname}`);
+        },
+        transform: function (req, file, cb) {
+          //Perform desired transformations
+          cb(
+            null,
+            sharp(file)
+              .resize(300, 300, {
+                fit: 'inside',
+              })
+              .jpeg({ quality: 75 })
+          );
+        },
+      },
+    ],
   }),
 });
 
