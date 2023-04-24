@@ -3,15 +3,13 @@ const mongoose = require('mongoose'),
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  firstName: { type: String },
   email: { type: String, required: true },
-  lastName: { type: String },
   bio: { type: String, maxLength: 150 },
   username: { type: String, required: true },
-  password: { type: String, minLength: 6 },
+  password: { type: String, minLength: 6, required: true },
   website: { type: String },
-  isModerator: { type: Boolean },
-  avatar: { type: String },
+  isModerator: { type: Boolean, required: true },
+  avatar: { type: String, required: true },
   rooms: [{ type: Schema.Types.ObjectId, ref: 'Room' }],
 });
 

@@ -24,35 +24,23 @@ exports.login = async function (req, res) {
 };
 
 exports.register = function (req, res) {
-  console.log(req.body);
   const { firstName, lastName, username, password, email, isModerator } =
     req.body;
   const userId = new mongoose.Types.ObjectId();
 
-  if (process.env.NODE_ENV !== 'test') {
-    fs.mkdirSync(`./public/uploads/${userId.toString()}`, { recursive: true });
-  } else {
-    fs.mkdirSync(`./public/TESTuploads/${userId.toString()}`, {
-      recursive: true,
-    });
-  }
-
   User.register(
     new User({
       _id: userId,
-      firstName: firstName || '',
-      lastName: lastName || '',
       username: username,
       email: email || '',
       website: '',
       bio: '',
       isModerator: isModerator || false,
-      avatar: 'none',
+      avatar: 'https://jaesymphonyreal.s3.amazonaws.com/guest-face.svg',
     }),
     password,
     function (err, msg) {
       if (err) {
-        console.log(err);
         res.sendStatus(400);
       } else {
         res.sendStatus(200);

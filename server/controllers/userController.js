@@ -24,9 +24,10 @@ exports.users_get = async (req, res, next) => {
   }
 };
 exports.user_put = async (req, res, next) => {
-  let { order, user, room, bio, website, email } = req.body;
+  let { order, user, room, bio, website, email, avatar } = req.body;
   user = user || null;
   room = room || null;
+  let updateFields = {};
 
   switch (order) {
     case 'userLeaving':
@@ -62,8 +63,6 @@ exports.user_put = async (req, res, next) => {
         throw new Error(error);
       }
     case 'updateUser':
-      let updateFields = {};
-
       if (bio) updateFields.bio = bio;
       if (email) updateFields.email = email;
       if (website) updateFields.website = website;
@@ -73,8 +72,23 @@ exports.user_put = async (req, res, next) => {
         const userDoc = await User.findByIdAndUpdate(req.params.id, {
           $set: updateFields,
         });
-        console.log('changed to ', userDoc);
         if (userDoc) {
+          return res.status(200);
+        } else {
+          return res.status(404);
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    case 'changeAvatar':
+      if (avatar) updateFields.avatar = avatar;
+      console.log('passing');
+      try {
+        const userDoc = await User.findByIdAndUpdate(req.params.id, {
+          $set: updateFields,
+        });
+        if (userDoc) {
+          console.log(userDoc);
           return res.status(200);
         } else {
           return res.status(404);
