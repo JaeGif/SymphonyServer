@@ -41,7 +41,7 @@ const upload = multer({
               .resize(300, 300, {
                 fit: 'inside',
               })
-              .jpeg({ quality: 75 })
+              .jpeg({ quality: 50 })
           );
         },
       },

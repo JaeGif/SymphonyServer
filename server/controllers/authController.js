@@ -19,13 +19,13 @@ exports.login = async function (req, res) {
       });
     })
     .catch((err) => {
+      res.sendStatus(401);
       console.log(err);
     });
 };
 
 exports.register = function (req, res) {
-  const { firstName, lastName, username, password, email, isModerator } =
-    req.body;
+  const { username, password, email, isModerator } = req.body;
   const userId = new mongoose.Types.ObjectId();
 
   User.register(
@@ -41,6 +41,7 @@ exports.register = function (req, res) {
     password,
     function (err, msg) {
       if (err) {
+        console.log(err);
         res.sendStatus(400);
       } else {
         res.sendStatus(200);

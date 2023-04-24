@@ -82,7 +82,6 @@ exports.user_put = async (req, res, next) => {
       }
     case 'changeAvatar':
       if (avatar) updateFields.avatar = avatar;
-      console.log('passing');
       try {
         const userDoc = await User.findByIdAndUpdate(req.params.id, {
           $set: updateFields,
