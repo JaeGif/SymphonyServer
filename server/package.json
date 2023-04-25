@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.317.0",
+    "@faker-js/faker": "^7.6.0",
     "aws-sdk": "^2.1363.0",
     "body-parser": "^1.20.2",
     "connect-mongo": "^5.0.0",
