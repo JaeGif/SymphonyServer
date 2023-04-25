@@ -7,12 +7,12 @@ const { mongoose } = require('mongoose');
 const fs = require('fs');
 
 exports.rooms_get = async (req, res, next) => {
-  let { topic, title, popular, cursor, returnLimit } = req.query;
-  returnLimit = returnLimit || 10;
+  let { topic, title, popular, cursor, returnLimit, user } = req.query;
+  returnLimit = Number(returnLimit) || 10;
   cursor = cursor || 0;
   popular = popular || false;
+  user = new mongoose.Types.ObjectId(user) || null;
   const skipBy = parseInt(cursor);
-  console.log(popular);
 
   if (topic || title) {
     // search query
@@ -31,14 +31,19 @@ exports.rooms_get = async (req, res, next) => {
         .sort({ users: -1 })
         .skip(skipBy)
         .limit(returnLimit);
-      console.log(rooms);
       rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
     } catch (err) {
       throw Error(err);
     }
-  } else if (popular) {
+  } else if (popular && user) {
+    console.log(user);
     try {
-      const rooms = await Room.find({}).sort({ users: -1 }).limit(returnLimit);
+      const rooms = await Room.aggregate([
+        { $match: { users: { $nin: [user] } } },
+      ])
+        .addFields({ length: { $size: '$users' } }) //adds a new field, to the existing ones (incl. _id)
+        .sort({ length: -1 })
+        .limit(returnLimit);
       rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
     } catch (err) {
       throw Error(err);
