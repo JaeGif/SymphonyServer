@@ -27,22 +27,24 @@ exports.rooms_get = async (req, res, next) => {
         topic: topicQuery,
       })
         .find({ title: titleQuery })
-        .find({ public: true })
         .sort({ users: -1 })
         .skip(skipBy)
         .limit(returnLimit);
-      rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
+      let results = [...rooms];
+      results = results.filter((room) => room.public === true);
+      console.log('results', results);
+      results ? res.json({ rooms: results }).status(200) : res.sendStatus(404);
     } catch (err) {
       throw Error(err);
     }
   } else if (popular && user) {
-    console.log(user);
     try {
       const rooms = await Room.aggregate([
-        { $match: { users: { $nin: [user] } } },
+        { $match: { $and: [({ users: { $nin: [user] } }, { public: true })] } },
       ])
         .addFields({ length: { $size: '$users' } }) //adds a new field, to the existing ones (incl. _id)
         .sort({ length: -1 })
+
         .limit(returnLimit);
       rooms ? res.json({ rooms }).status(200) : res.sendStatus(404);
     } catch (err) {

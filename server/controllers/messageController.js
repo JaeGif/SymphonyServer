@@ -39,11 +39,12 @@ exports.get_messages = async (req, res, next) => {
       .sort('-createdAt')
       .skip(skipBy)
       .limit(returnLimit);
-    let results = [...messages];
+    let results = [...messages.reverse()];
     if (userId) {
       // takes uID string
       results = results.filter((post) => post.user.toString() === userId);
     }
+    console.log(results);
     const nextCursor = parseInt(cursor) + results.length;
     const previousCursor = parseInt(cursor);
 
