@@ -8,7 +8,7 @@ const fs = require('fs');
 
 exports.rooms_get = async (req, res, next) => {
   let { topic, title, popular, cursor, returnLimit, user } = req.query;
-  returnLimit = Number(returnLimit) || 10;
+  returnLimit = Number(returnLimit) || 20;
   cursor = cursor || 0;
   popular = popular || false;
   user = new mongoose.Types.ObjectId(user) || null;
