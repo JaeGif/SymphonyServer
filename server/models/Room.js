@@ -10,6 +10,7 @@ const RoomSchema = new Schema(
     description: { type: String, maxLength: 40 },
     title: { type: String, required: true },
     avatar: { type: String },
+    seen: { type: Boolean },
   },
   { timestamps: true }
 );

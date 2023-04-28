@@ -1,0 +1,29 @@
+.animateSkeleton {
+  background: linear-gradient(
+    0.25turn,
+    transparent,
+    rgb(155, 155, 155),
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: -50vw;
+  animation: loading 2.5s infinite;
+}
+.animateSkeletonLight {
+  background: linear-gradient(
+    0.25turn,
+    transparent,
+    rgb(230, 230, 230),
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: -50vw;
+  animation: loading 2.5s infinite;
+}
+@keyframes loading {
+  to {
+    background-position: 100vw;
+  }
+}

@@ -3,7 +3,7 @@ const Room = require('../models/Room');
 const express = require('express'),
   User = require('../models/User'),
   jwt = require('jwt-simple');
-const { mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const fs = require('fs');
 
 exports.rooms_get = async (req, res, next) => {
